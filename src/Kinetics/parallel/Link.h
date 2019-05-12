@@ -6,7 +6,7 @@
 #include <vector>
 #include "../Eigen/Dense"
 #include "LinkParameter.h"
-
+//#include "demoBipedLink.h"
 using namespace std;
 using namespace Eigen;
 

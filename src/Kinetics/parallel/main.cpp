@@ -5,9 +5,9 @@
 #include "Kinematics.h"
 #include "Link.h"
 #include "../Eigen/Dense"
-//#include "matplotlibcpp.h"
+#include "matplotlibcpp.h"
 
-//namespace plt = matplotlibcpp;
+namespace plt = matplotlibcpp;
 
 double deg2rad( double deg ) {
     return M_PI*deg/180.0f;
@@ -56,18 +56,6 @@ int main() {
 
     kine.calcForwardKinematics(BASE);
 
-    /*
-    std::cout << ulink[BASE].p.transpose() << std::endl;
-    std::cout << ulink[RY  ].p.transpose() << std::endl;
-    std::cout << ulink[RR1 ].p.transpose() << std::endl;
-    std::cout << ulink[RP1 ].p.transpose() << std::endl;
-    std::cout << ulink[RP2].p.transpose() << std::endl;
-    std::cout << ulink[RP3].p.transpose() << std::endl;
-    std::cout << ulink[RP4].p.transpose() << std::endl;
-    std::cout << ulink[RR2].p.transpose() << std::endl;
-    std::cout << ulink[RF ].p.transpose() << std::endl;
-    */
-
     for( i=0; i<row; i++ ) {
         for( j=0; j<colm; j++ ) {
             ofs << base[i][j] << ' ';
@@ -76,25 +64,16 @@ int main() {
             ofs << std::endl;
         }
     }
-
-    /*
-    for( int r_leg=1; r_leg<9; r_leg++ ) {
-        ofs << ulink[r_leg].p.transpose() << std::endl;
-    }
-    ofs << std::endl;
-
-    for( int l_leg=9; l_leg<17; l_leg++ ) {
-        ofs << ulink[l_leg].p.transpose() << std::endl;
-    }
-    */
-    
-    int target_link=8;
+   
+    int target_link = RR2;
     Link Target = ulink[target_link];
 
-    Target.p << 0.084, -0.44, -3.39;
+    Target.p << 0.14, -0.44, -2.88;
+    //Target.R = kine.computeMatrixFromAngles( deg2rad(-20), deg2rad(-40), deg2rad(-30));
+    //Target.R = kine.computeMatrixFromAngles( deg2rad(57.3), deg2rad(0), deg2rad(-0.05) );
 
     kine.calcInverseKinematics(target_link, Target);
-
+    
     std::cout << ulink[BASE].p.transpose() << std::endl;
     std::cout << ulink[RR1].p.transpose() << std::endl;
     std::cout << ulink[RP1].p.transpose() << std::endl;
@@ -103,7 +82,16 @@ int main() {
     std::cout << ulink[RP4].p.transpose() << std::endl;
     std::cout << ulink[RR2].p.transpose() << std::endl;
     std::cout << ulink[RF].p.transpose() << std::endl;
+     
+    std::cout << ulink[LR1].p.transpose() << std::endl;
+    std::cout << ulink[LP1].p.transpose() << std::endl;
+    std::cout << ulink[LP2].p.transpose() << std::endl;
+    std::cout << ulink[LP3].p.transpose() << std::endl;
+    std::cout << ulink[LP4].p.transpose() << std::endl;
+    std::cout << ulink[LR2].p.transpose() << std::endl;
+    std::cout << ulink[LF].p.transpose() << std::endl;
     
+
     z_list.push_back((ulink[BASE].p)(2));
     z_list.push_back((ulink[RY  ].p)(2));
     z_list.push_back((ulink[RR1 ].p)(2));
@@ -133,10 +121,12 @@ int main() {
         ofs << ulink[l_leg].p.transpose() << std::endl;
     }
 
-    /*
+     
     plt::plot(x_list, z_list);
+    plt::xlim(-0.05,1.0);
+    plt::ylim(-3.5, 0.0);
     plt::show();
-    */
+    
 
     return 0;
 }

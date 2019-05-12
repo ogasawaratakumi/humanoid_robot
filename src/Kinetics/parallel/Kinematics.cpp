@@ -97,7 +97,7 @@ bool Kinematics::calcInverseKinematics(int to, Link target)
 	MatrixXd J, dq;
 	Matrix<double,6,1> err;
 
-	ColPivHouseholderQR<MatrixXd> QR; //QR分解?
+	ColPivHouseholderQR<MatrixXd> QR;
 	const double dampingConstantSqr = 1.0e-12;
 	const double lambda = 0.5;
 	const int iteration = 100;
