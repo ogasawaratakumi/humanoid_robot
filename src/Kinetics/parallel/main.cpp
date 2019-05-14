@@ -22,8 +22,6 @@ int main() {
     const char *fileName = "data.txt";
     std::ofstream ofs(fileName);
 
-    //TODO LinkParameter.hに移行
-    
     int i, j;
     const int row = 4;
     const int colm = 3;
@@ -43,7 +41,7 @@ int main() {
     ulink[LP1].q = deg2rad(-20.0);
     ulink[LP2].q = -deg2rad(-20.0);
     ulink[LP3].q = deg2rad(20.0);
-    ulink[LP4].q = -deg2rad(20.0) + deg2rad(0.0);
+    ulink[LP4].q = -deg2rad(20.0);
     ulink[LR2].q = deg2rad(0.0);
 
     ulink[RY ].q = deg2rad(0.0);
@@ -51,7 +49,7 @@ int main() {
     ulink[RP1].q = deg2rad(-20.0);
     ulink[RP2].q = -deg2rad(-20.0);
     ulink[RP3].q = deg2rad(20.0);
-    ulink[RP4].q = -deg2rad(20.0) + deg2rad(0.0);
+    ulink[RP4].q = -deg2rad(20.0);
     ulink[RR2].q = deg2rad(0.0);
 
     kine.calcForwardKinematics(BASE);
@@ -68,65 +66,41 @@ int main() {
     int target_link = RR2;
     Link Target = ulink[target_link];
 
-    Target.p << 0.14, -0.44, -2.88;
-    //Target.R = kine.computeMatrixFromAngles( deg2rad(-20), deg2rad(-40), deg2rad(-30));
-    //Target.R = kine.computeMatrixFromAngles( deg2rad(57.3), deg2rad(0), deg2rad(-0.05) );
+    Target.p << 0.14, -0.42, -2.60;
+    Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-20) );
 
     kine.calcInverseKinematics(target_link, Target);
-    
-    std::cout << ulink[BASE].p.transpose() << std::endl;
-    std::cout << ulink[RR1].p.transpose() << std::endl;
-    std::cout << ulink[RP1].p.transpose() << std::endl;
-    std::cout << ulink[RP2].p.transpose() << std::endl;
-    std::cout << ulink[RP3].p.transpose() << std::endl;
-    std::cout << ulink[RP4].p.transpose() << std::endl;
-    std::cout << ulink[RR2].p.transpose() << std::endl;
-    std::cout << ulink[RF].p.transpose() << std::endl;
-     
-    std::cout << ulink[LR1].p.transpose() << std::endl;
-    std::cout << ulink[LP1].p.transpose() << std::endl;
-    std::cout << ulink[LP2].p.transpose() << std::endl;
-    std::cout << ulink[LP3].p.transpose() << std::endl;
-    std::cout << ulink[LP4].p.transpose() << std::endl;
-    std::cout << ulink[LR2].p.transpose() << std::endl;
-    std::cout << ulink[LF].p.transpose() << std::endl;
-    
 
-    z_list.push_back((ulink[BASE].p)(2));
-    z_list.push_back((ulink[RY  ].p)(2));
-    z_list.push_back((ulink[RR1 ].p)(2));
-    z_list.push_back((ulink[RP1 ].p)(2));
-    z_list.push_back((ulink[RP2 ].p)(2));
-    z_list.push_back((ulink[RP3 ].p)(2));
-    z_list.push_back((ulink[RP4 ].p)(2));
-    z_list.push_back((ulink[RR2 ].p)(2));
-    z_list.push_back((ulink[RF  ].p)(2));
+    target_link = LR2;
+    Link Target_l = ulink[target_link];
 
-    x_list.push_back((ulink[BASE].p)(0));
-    x_list.push_back((ulink[RY  ].p)(0));
-    x_list.push_back((ulink[RR1 ].p)(0));
-    x_list.push_back((ulink[RP1 ].p)(0));
-    x_list.push_back((ulink[RP2 ].p)(0));
-    x_list.push_back((ulink[RP3 ].p)(0));
-    x_list.push_back((ulink[RP4 ].p)(0));
-    x_list.push_back((ulink[RR2 ].p)(0));
-    x_list.push_back((ulink[RF  ].p)(0));
+    Target_l.p << 0.12, 0.46, -2.60;
+    Target_l.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-20) );
+
+    kine.calcInverseKinematics(target_link, Target_l);
     
-     for( int r_leg=1; r_leg<9; r_leg++ ) {
+    for( int i=BASE; i<=LF; i++ ) {
+        std::cout << ulink[i].p.transpose() << std::endl;
+    }
+
+    for( int i=BASE; i<=RF; i++ ) {
+        z_list.push_back((ulink[i].p)(2));
+        x_list.push_back((ulink[i].p)(0));
+    }
+
+     for( int r_leg=RY; r_leg<RF; r_leg++ ) {
         ofs << ulink[r_leg].p.transpose() << std::endl;
     }
     ofs << std::endl;
 
-    for( int l_leg=9; l_leg<17; l_leg++ ) {
+    for( int l_leg=LY; l_leg<LF; l_leg++ ) {
         ofs << ulink[l_leg].p.transpose() << std::endl;
     }
-
      
     plt::plot(x_list, z_list);
     plt::xlim(-0.05,1.0);
     plt::ylim(-3.5, 0.0);
     plt::show();
     
-
     return 0;
 }
