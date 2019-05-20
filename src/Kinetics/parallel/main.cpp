@@ -66,7 +66,7 @@ int main() {
     int target_link = RR2;
     Link Target = ulink[target_link];
 
-    Target.p << 0.14, -0.42, -2.60;
+    Target.p << 0.14, -0.42, -2.80;
     Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-20) );
 
     kine.calcInverseKinematics(target_link, Target);
@@ -88,12 +88,12 @@ int main() {
         x_list.push_back((ulink[i].p)(0));
     }
 
-     for( int r_leg=RY; r_leg<RF; r_leg++ ) {
+     for( int r_leg=RY; r_leg<=RF; r_leg++ ) {
         ofs << ulink[r_leg].p.transpose() << std::endl;
     }
     ofs << std::endl;
 
-    for( int l_leg=LY; l_leg<LF; l_leg++ ) {
+    for( int l_leg=LY; l_leg<=LF; l_leg++ ) {
         ofs << ulink[l_leg].p.transpose() << std::endl;
     }
      
