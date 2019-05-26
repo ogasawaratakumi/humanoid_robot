@@ -1,8 +1,27 @@
+#include "Link.h"
+#include "Kinematics.h"
+
+#include <cmath>
+#include <fstream>
 #include <cstdio>
 #include <GL/glut.h>
 
-static int J1 = 0, J2 = 0, J3 = 0, J4 = 0;
-static int shoulder = 0, elbow = 0;
+Link ulink[LINK_NUM], LEG_Link;
+Kinematics *ik_node;
+
+static double pos_step = 0.01;
+static double rot_step = 0.5;
+
+static double angle[6];
+static double initial_angle[7] = { 0.0, 90.0, -135.0, -45.0, -60.0, 60.0, 90.0 };
+
+double rad2deg( double rad ) {
+  return rad*180.0f/M_PI;
+}
+
+double deg2rad( double deg ) {
+  return deg*M_PI/180.0f;
+}
 
 void init() {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -13,19 +32,17 @@ void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glColor3f(1.0,1.0,0.0);
   glPushMatrix();
+  
+  glTranslatef(-0.3, 0.0, 0.0);
+  glRotatef((GLfloat) angle[1], 0.0, 0.0, 1.0);
+  glTranslatef(0.3, 0.0, 0.0);
+  glPushMatrix();
+  glScalef(2.0, 0.4, 0.0);
+  glutWireCube(0.3);
+  glPopMatrix();
 
   glTranslatef(-0.3, 0.0, 0.0);
-  glRotatef((GLfloat) shoulder, 0.0, 0.0, 1.0);
-  glTranslatef(0.3, 0.0, 0.0);
-  glPushMatrix();
-  //x,y,zに拡大縮小
-  glScalef(2.0, 0.4, 0.0);
-  glutWireCube(0.3);
-  glPopMatrix();
-
-  //glTranslatef(0.60, -0.9, 0.0);
-  glTranslatef(0.3, 0.0, 0.0);
-  glRotatef((GLfloat) elbow, 0.0, 0.0, 1.0);
+  glRotatef((GLfloat) angle[2], 0.0, 0.0, 1.0);
   glTranslatef(0.3, 0.0, 0.0);
   glPushMatrix();
   glScalef(2.0, 0.4, 0.0);
@@ -33,7 +50,7 @@ void display() {
   glPopMatrix();
 
   glTranslatef(0.3, 0.0, 0.0);
-  glRotatef((GLfloat) J3, 0.0, 0.0, 1.0);
+  glRotatef((GLfloat) angle[3], 0.0, 0.0, 1.0);
   glTranslatef(0.3, 0.0, 0.0);
   glPushMatrix();
   glScalef(2.0, 0.4, 0.0);
@@ -41,8 +58,24 @@ void display() {
   glPopMatrix();
 
   glTranslatef(0.3, 0.0, 0.0);
-  glRotatef((GLfloat) J4, 0.0, 0.0, 1.0);
+  glRotatef((GLfloat) angle[4], 0.0, 0.0, 1.0);
   glTranslatef(0.3, 0.0, 0.0);
+  glPushMatrix();
+  glScalef(2.0, 0.4, 0.0);
+  glutWireCube(0.3);
+  glPopMatrix();
+
+  glTranslatef(0.3, 0.0, 0.0);
+  glRotatef((GLfloat) angle[5], 0.0, 0.0, 1.0);
+  glTranslatef(0.30, 0.0, 0.0);
+  glPushMatrix();
+  glScalef(2.0, 0.4, 0.0);
+  glutWireCube(0.3);
+  glPopMatrix();
+
+  glTranslatef(0.3, 0.0, 0.0);
+  glRotatef((GLfloat) angle[6], 0.0, 0.0, 1.0);
+  glTranslatef(0.30, 0.0, 0.0);
   glPushMatrix();
   glScalef(2.0, 0.4, 0.0);
   glutWireCube(0.3);
@@ -64,35 +97,51 @@ void reshape( int w, int h ) {
 
 void keyboard( unsigned char key, int x, int y ) {
   switch(key) {
+	case 'a':
+	angle[2] += 1;
+	glutPostRedisplay();
+	break;
+	case 'A':
+	angle[2] -= 1;
+	glutPostRedisplay();
+	break;
 	case 's':
-	shoulder = (shoulder+5) % 360;
+	angle[3] += 1;
+	printf("angle[3] = %lf\n", angle[3]);
 	glutPostRedisplay();
 	break;
 	case 'S':
-	shoulder = (shoulder-5) % 360;
+	angle[3] -= 1;
+	if(angle[3] <= -90) {
+	  angle[3] = -90;
+	  break;
+	}
 	glutPostRedisplay();
 	break;
-	case 'e':
-	elbow = (elbow+5) % 360;
+	case 'd':
+	angle[4] += 1;
+	printf("angle[4] = %lf\n", angle[4]);
+	if(angle[4] >= 0) {
+	  angle[4] = 0;
+	  break;
+	}
 	glutPostRedisplay();
 	break;
-	case 'E':
-	elbow = (elbow-5) % 360;
-	glutPostRedisplay();
-	case 'w':
-	J3 = (J3+5) % 360;
+	case 'f':
+	angle[5] += 1;
 	glutPostRedisplay();
 	break;
-	case 'W':
-	J3 = (J3-5) % 360;
+	case 'F':
+	angle[5] -= 1;
 	glutPostRedisplay();
 	break;
-	case 'r':
-	J4 = (J4+5) % 360;
-	glutPostRedisplay();
-	break;
-	case 'R':
-	J4 = (J4-5) % 360;
+	case 'D':
+	angle[4] -= 1;
+	printf("angle[4] = %lf\n", angle[4]);
+	if(angle[4] <= -90) {
+	  angle[4] = -90;
+	  break;
+	}
 	glutPostRedisplay();
 	break;
 	case 'q':
@@ -101,17 +150,50 @@ void keyboard( unsigned char key, int x, int y ) {
 	default:
 	break;
   }
+  /*
+  ik_node->calcInverseKinematics(RP2, LEG_Link);
+  for(int i=0; i<6; i++) {
+	if(i==2 || i==3 || i==4 || i==5) {
+	  angle[i] = rad2deg(ulink[i+1].q);
+	}
+  }
+  */
 }
 
 void mouse( int button, int state, int x, int y ) {
   switch(button) {
 	case GLUT_LEFT_BUTTON:
-	printf("x = %d, y = %d\n", x, y);
-	break;
+	  printf("x = %d, y = %d\n", x, y);
+	  break;
+	case GLUT_RIGHT_BUTTON:
+	  if(state == GLUT_DOWN) {
+		printf("saved!\n");
+		FILE *fp = fopen("./leg_data.txt","a");
+		if(fp != NULL) {
+		  //for(int i=0; i=7; i++) {
+			fprintf(fp,"angle[2] =  %lf angle[3] = %lf angle[4] = %lf\n", angle[2], angle[3], angle[4]);
+		  //}
+		}
+		fclose(fp);
+	  }
   }
 }
 
 int main( int argc, char *argv[] ) {
+  
+  ik_node = new Kinematics(ulink);
+  SetJointInfo(ulink);
+
+  for(int i=0; i<7; i++) {
+	if(i==1 || i==2 || i==3 || i==4 || i==5 || i==6) {
+	  ulink[i+1].q = deg2rad(initial_angle[i]);
+	  angle[i] = initial_angle[i];
+	}
+  }
+  ik_node->calcForwardKinematics(BASE);
+  LEG_Link = ulink[RP2];
+  
+
   glutInit( &argc, argv );
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowSize(800, 800);
