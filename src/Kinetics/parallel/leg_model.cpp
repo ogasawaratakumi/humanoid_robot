@@ -171,7 +171,7 @@ void mouse( int button, int state, int x, int y ) {
 		FILE *fp = fopen("./leg_data.txt","a");
 		if(fp != NULL) {
 		  //for(int i=0; i=7; i++) {
-			fprintf(fp,"angle[2] =  %lf angle[3] = %lf angle[4] = %lf\n", angle[2], angle[3], angle[4]);
+			fprintf(fp,"angle[2] = %lf angle[3] = %lf angle[4] = %lf\n", angle[2]+180, angle[3], angle[4]);
 		  //}
 		}
 		fclose(fp);
