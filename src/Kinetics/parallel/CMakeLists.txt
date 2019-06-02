@@ -2,10 +2,20 @@ cmake_minimum_required(VERSION 2.8)
 
 project( parallel CXX )
 
-#find_package(PythonLibs 2.7)
-find_package(PythonLibs REQUIRED)
-#target_include_directories(parallel PRIVATE ${PYTHON_INCLUDE_DIRS})
-#target_link_libraries(parallel ${PYTHON_LIBRARIES})
-include_directories(${PYTHON_INCLUDE_DIRS})
-add_executable(parallel Link.cpp Jacobian.cpp Kinematics.cpp main.cpp)
-target_link_libraries(parallel ${PYTHON_LIBRARIES})
+set(PROJECT_GL simulator_3D)
+set(GL_SRC simulator_3D.cpp)
+
+set(PROJECT_TEST main)
+set(TEST_SRC main.cpp)
+
+find_package(GLUT)
+find_package(OpenGL)
+#find_package(Boost COMPONENTS system thread filesystem timer)
+
+add_definitions(-lglut -lGL -lGLU)
+
+add_executable(${PROJECT_GL} ${GL_SRC} Link.cpp Jacobian.cpp Kinematics.cpp)
+add_executable(${PROJECT_TEST} ${TEST_SRC} Link.cpp Jacobian.cpp Kinematics.cpp)
+
+target_link_libraries(${PROJECT_GL} ${GLUT_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(${PROJECT_TEST} ${GLUT_LIBRARY} ${OPENGL_LIBRARY})

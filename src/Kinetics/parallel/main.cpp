@@ -62,10 +62,6 @@ int main() {
 	}
   }
 
-  for(int i=RY; i<=RF; i++) {
-	x_list.push_back((ulink[i].p(0)).transpose());
-	z_list.push_back((ulink[i].p(2)).transpose());
-	}
 
   int target_link = RR2;
   Link Target = ulink[target_link];

@@ -54,7 +54,7 @@ void display() {
   glTranslatef(0.3, 0.0, 0.0);
   glPushMatrix();
   glScalef(2.0, 0.4, 0.0);
-  glutWireCube(0.3);
+  glutWireCube(0.2);
   glPopMatrix();
 
   glTranslatef(0.3, 0.0, 0.0);
@@ -70,7 +70,7 @@ void display() {
   glTranslatef(0.30, 0.0, 0.0);
   glPushMatrix();
   glScalef(2.0, 0.4, 0.0);
-  glutWireCube(0.3);
+  glutWireCube(0.2);
   glPopMatrix();
 
   glTranslatef(0.3, 0.0, 0.0);
@@ -107,7 +107,7 @@ void keyboard( unsigned char key, int x, int y ) {
 	break;
 	case 's':
 	angle[3] += 1;
-	printf("angle[3] = %lf\n", angle[3]);
+	//printf("angle[3] = %lf\n", angle[3]);
 	glutPostRedisplay();
 	break;
 	case 'S':
@@ -120,7 +120,7 @@ void keyboard( unsigned char key, int x, int y ) {
 	break;
 	case 'd':
 	angle[4] += 1;
-	printf("angle[4] = %lf\n", angle[4]);
+	//printf("angle[4] = %lf\n", angle[4]);
 	if(angle[4] >= 0) {
 	  angle[4] = 0;
 	  break;
@@ -137,7 +137,7 @@ void keyboard( unsigned char key, int x, int y ) {
 	break;
 	case 'D':
 	angle[4] -= 1;
-	printf("angle[4] = %lf\n", angle[4]);
+	//printf("angle[4] = %lf\n", angle[4]);
 	if(angle[4] <= -90) {
 	  angle[4] = -90;
 	  break;
@@ -168,7 +168,7 @@ void mouse( int button, int state, int x, int y ) {
 	case GLUT_RIGHT_BUTTON:
 	  if(state == GLUT_DOWN) {
 		printf("saved!\n");
-		FILE *fp = fopen("./leg_data.txt","a");
+		FILE *fp = fopen("./LEG_data.txt","a");
 		if(fp != NULL) {
 		  //for(int i=0; i=7; i++) {
 			fprintf(fp,"angle[2] = %lf angle[3] = %lf angle[4] = %lf\n", angle[2]+180, angle[3], angle[4]);
