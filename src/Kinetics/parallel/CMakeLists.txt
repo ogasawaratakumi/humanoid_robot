@@ -5,7 +5,7 @@ project( parallel CXX )
 set(PROJECT_GL simulator_3D)
 set(GL_SRC simulator_3D.cpp)
 
-set(PROJECT_TEST main)
+set(PROJECT_TEST parallel)
 set(TEST_SRC main.cpp)
 
 find_package(GLUT)
