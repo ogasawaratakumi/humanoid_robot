@@ -12,7 +12,7 @@
 Link ulink[LINK_NUM], LEG_Link;
 Kinematics *ik_node;
 
-static double pos_step = 0.001;
+static double pos_step = 0.01;
 static double rot_step = 0.5;
 
 static double roll = 0.0f;
@@ -20,8 +20,9 @@ static double pitch = 0.0f;
 static double yaw = 0.0f;
 
 static double angle[6];
-static double initial_angle[6] = {0.0,-50.0,50.0,0.0,50.0,0.0};
-//static double initial_angle[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+//static double initial_angle[6] = {0.0,-50.0,50.0,0.0,50.0,3.0};
+static double initial_angle[6] = { -50.0, 50.0, 50.0, -50.0, 0.0, 0.0 };
+//static double initial_angle[6] = { -0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static GLdouble centerX = 0.0f;
 static GLdouble centerY = 0.0f;
 static GLdouble centerZ = 0.0f;
@@ -224,112 +225,52 @@ static void display(void)
   glMultMatrixd(Rotate);
 
   /* シーンの描画 */
-  myGround(-2.0);                           
+  myGround(-4.5);                           
 
   /*各リンクは相対座標で考えられている。*/
 
-  // 足裏
   glPushMatrix();
-  glTranslated(0.0, -1.8, 1.2);
-  //glRotated(angle[0], 0.0, 1.0, 0.0);
-  //myCylinder(0.8, 0.2, 10);                 
-  myBox(1.0, 0.1, 0.4);
 
-  //足首ロールから足裏にかけて
-  glTranslated(0.0, 0.4, 0.0);
-  myBox(0.2,0.4,0.2);
-
-  // 足首ロール and ピッチ
-  glTranslated(0.0, 0.6, 0.0);
+  //股
+  glTranslated(0.0, 0.25, -1.4);
   glRotated(90.0, 1.0, 0.0, 0.0);
-  glRotated(angle[1], 0.0, 1.0, 0.0);
-  //glRotated(angle[2],1.0, 0.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
-
-  //膝下
-  glTranslated(0.0, 0.0, -1.0);
-  myBox(0.2, 0.2, 1.0);
-
-  // 関節
-  glTranslated(0.0, 0.0, -1.0);
-  glRotated(angle[2], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
-  //glRotated(angle[3], 0.0, 0.0, 1.0);
-
-  //膝
-  glTranslated(0.0, 0.0, -0.5);
-  myBox(0.2, 0.2, 0.6);
-
-  // 関節
-  glTranslated(0.0, 0.0, -0.5);
-  glRotated(angle[4], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
+  glRotated(angle[0], 0.0, 1.0, 0.0);
+  myCylinder(0.3, 0.4, 12);
 
   //膝上
-  glTranslated(0.0, 0.0, -1.0);
-  myBox(0.2, 0.2, 1.0);
-
-  glTranslated(-0.2,0.0, -1.5);
-  glRotated(30,0.0,1.0,0.0);
-  myBox(0.2,0.2,0.5);
-
-  //股ヨー軸
-  glTranslated(0.5, 0.0, -0.3);
-  glRotated(90.0, 0.0, 0.0, 1.0);
-  //glRotated(angle[4], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
-
-  glPopMatrix();
-
-  // 足裏
-  glPushMatrix();
-  glTranslated(0.0, -1.8, -1.2);
-  //glRotated(angle[0], 0.0, 1.0, 0.0);
-  //myCylinder(0.8, 0.2, 10);                 /* 土台　　　 */
-  myBox(1.0, 0.1, 0.4);
-
-  //足首ロールから足裏にかけて
-  glTranslated(0.0, 0.4, 0.0);
-  myBox(0.2,0.4,0.2);
-
-  // 足首ロール and ピッチ
-  glTranslated(0.0, 0.6, 0.0);
-  glRotated(90.0, 1.0, 0.0, 0.0);
+  glTranslated(0.0,-0.0, 0.8);
+  //glRotated(90.0, 1.0, 0.0, 0.0);
+  myBox(0.2,0.2,0.6);
+ 
+  //関節
+  glTranslated(0.0, -0.0, 0.8);
+  //glRotated(90.0, 1.0, 0.0, 0.0);
   glRotated(angle[1], 0.0, 1.0, 0.0);
-  //glRotated(angle[2],1.0, 0.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
-
-  //膝下
-  glTranslated(0.0, 0.0, -1.0);
-  myBox(0.2, 0.2, 1.2);
-
-  // 関節
-  glTranslated(0.0, 0.0, -1.0);
-  glRotated(angle[2], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
-  //glRotated(angle[3], 0.0, 0.0, 1.0);
+  myCylinder(0.3,0.4,12);
 
   //膝
-  glTranslated(0.0, 0.0, -0.5);
-  myBox(0.2, 0.2, 0.5);
+  glTranslated(0.0, 0.0, 0.45);
+  myBox(0.2,0.2,0.2);
 
-  // 関節
-  glTranslated(0.0, 0.0, -0.5);
-  glRotated(angle[4], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
+  //関節
+  glTranslated(0.0, 0.0, 0.45);
+  glRotated(angle[2], 0.0, 1.0, 0.0);
+  myCylinder(0.3, 0.4, 12);
 
-  //膝上
-  glTranslated(0.0, 0.0, -1.0);
-  myBox(0.2, 0.2, 1.2);
+  //膝下
+  glTranslated(0.0, 0.0, 0.8);
+  //glRotated(90.0, 1.0, 0.0, 0.0);
+  myBox(0.2,0.2,0.6);
 
-  glTranslated(-0.2,0.0, -1.5);
-  glRotated(30,0.0,1.0,0.0);
-  myBox(0.2,0.2,0.5);
+  glTranslated(0.0, 0.0, 0.45);
+  glRotated(angle[3], 0.0, 1.0, 0.0);
+  myCylinder(0.3, 0.4, 12);
 
-  glTranslated(0.5, 0.0, -0.3);
-  glRotated(90.0, 0.0, 0.0, 1.0);
-  //glRotated(angle[4], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 16);
+  glTranslated(0.0, 0.0, 0.45);
+  myBox(0.2,0.2,0.2);
+
+  glTranslated(0.0,0.0,0.20);
+  myBox(0.8,0.6,0.1);
 
   glPopMatrix();
 
@@ -355,16 +296,23 @@ static void keyboard(unsigned char key, int x, int y)
 	exit(0);
   }else if(key == 'f'){	// x
 	LEG_Link.p(0) += pos_step;	
+	printf("pos[x] = %lf\n", LEG_Link.p(0));
   }else if(key == 'j'){
 	LEG_Link.p(0) -= pos_step; 
+	printf("pos[x] = %lf\n", LEG_Link.p(0));
   }else if(key == 'd'){	// y
 	LEG_Link.p(1) += pos_step;
+	printf("pos[y] = %lf\n", LEG_Link.p(1));
   }else if(key == 'k'){
 	LEG_Link.p(1) -= pos_step;
+	printf("pos[y] = %lf\n", LEG_Link.p(1));
   }else if(key == 's'){	// z
 	LEG_Link.p(2) += pos_step;
+	printf("pos[z] = %lf\n", LEG_Link.p(2));
   }else if(key == 'l'){
 	LEG_Link.p(2) -= pos_step;
+	printf("pos[z] = %lf\n", LEG_Link.p(2));
+  }else if(key == 'l'){
   }else if(key == 'r'){	// roll
 	roll += rot_step;
   }else if(key == 'u'){
@@ -383,12 +331,15 @@ static void keyboard(unsigned char key, int x, int y)
 	angle[1] -= 1;
   }
 
-  
 	 LEG_Link.R = ik_node->computeMatrixFromAngles(deg2rad(roll), deg2rad(pitch), deg2rad(yaw));
 
 	 ik_node->calcInverseKinematics(RR2, LEG_Link);
-	 for(int i=0;i<6;i++)
-	 angle[i] = rad2deg(ulink[i+1].q);
+	 //for(int i=0;i<6;i++)
+	 //angle[i] = rad2deg(ulink[i+1].q);
+	 angle[0] = rad2deg(ulink[RP1].q);
+	 angle[1] = rad2deg(ulink[RP2].q);
+	 angle[2] = rad2deg(ulink[RP3].q);
+	 angle[3] = rad2deg(ulink[RP4].q);
 }
 
 void mousemove( int x, int y ) {
@@ -415,7 +366,7 @@ void mouse( int button, int state, int x, int y ) {
 		  printf("saved!\n");
 		  FILE *fp = fopen("./LEG_data.txt","a");
 		  if( fp != NULL ) {
-			fprintf( fp, "angle[1] = %lf\n", angle[1] );
+			fprintf( fp, "angle[0] = %lf, angle[1] = %lf, angle[2] = %lf, angle[3] = %lf\n", angle[0], angle[1], angle[2], angle[3] );
 		  }
 		  fclose( fp );
 		}
@@ -451,24 +402,8 @@ static void init(void)
   qtor(Rotate, current);
 }
 
-void print_usage()
-{
-  printf("------------\n");
-  printf("x: 'f' or 'j'\n");
-  printf("y: 'd' or 'k'\n");
-  printf("z: 's' or 'l'\n");
-  printf("------------\n");
-  printf("------------\n");
-  printf("roll	: 'r' or 'u'\n");
-  printf("pitch	: 'e' or 'i'\n");
-  printf("yaw	: 'w' or 'o'\n");
-  printf("------------\n");
-}
-
 int main(int argc, char *argv[])
 {
-  print_usage();
-
   ik_node = new Kinematics(ulink);
   SetJointInfo(ulink);
 

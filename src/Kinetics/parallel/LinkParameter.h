@@ -40,6 +40,7 @@ enum {
     RP4,
     RR2,
     RF,
+	RF2,
     LY,
     LR1,
     LP1,
@@ -48,6 +49,7 @@ enum {
     LP4,
     LR2,
     LF,
+	LF2,
 
     LINK_NUM
 };
@@ -62,6 +64,7 @@ static const string joint_name[] = {
     "RP4",
     "RR2",
     "RF",
+	"RF2",
     "LY",
     "LR1",
     "LP1",
@@ -70,6 +73,7 @@ static const string joint_name[] = {
     "LP4",
     "LR2",
     "LF",
+	"LF2",
 };
 
 struct link_connect {
@@ -88,7 +92,8 @@ static const struct link_connect LINK_CONNECT[LINK_NUM] = {
     { NON, RP4, RP2  },
     { NON, RR2, RP3  },
     { NON, RF,  RP4  },
-    { NON, NON, RR2  },
+    { NON, RF2, RR2  },
+    { NON, NON, RF  },
 
     { NON, LR1, BASE },
     { NON, LP1, LY   },
@@ -97,7 +102,8 @@ static const struct link_connect LINK_CONNECT[LINK_NUM] = {
     { NON, LP4, LP2  },
     { NON, LR2, LP3  },
     { NON, LF,  LP4  },
-    { NON, NON, LR2  },
+    { NON, LF2, LR2  },
+    { NON, NON, LF  },
 };
 
 static const int LinkAxis[LINK_NUM][3] = {
@@ -111,6 +117,7 @@ static const int LinkAxis[LINK_NUM][3] = {
     {0,1,0},
     {1,0,0},
     {0,0,0},
+    {0,0,0},
 
     {0,0,1},
     {1,0,0},
@@ -120,6 +127,7 @@ static const int LinkAxis[LINK_NUM][3] = {
     {0,1,0},
     {1,0,0},
     {0,0,0},
+    {0,0,0},
 };
 
 static const double LinkPos[LINK_NUM][3] = {
@@ -127,21 +135,23 @@ static const double LinkPos[LINK_NUM][3] = {
 
     { 0.0f,  -44.0f,     0.0f},
     { 0.0f,    0.0f,   -42.8f},
-    {15.0f,    0.0f,     0.0f},
+    { 8.4f,    0.0f,     0.0f},
     { 0.0f,    0.0f,  -100.0f},
     { 0.0f,    0.0f,   -57.0f},
     { 0.0f,    0.0f,  -100.0f},
     { 0.0f,    0.0f,     0.0f},
     { 0.0f,    0.0f,   -43.0f},
+    {30.0f,    0.0f,    00.0f},
     
     { 0.0f,   44.0f,     0.0f},
     { 0.0f,    0.0f,   -42.8f},
-    {15.0f,    0.0f,     0.0f},
+    { 8.4f,    0.0f,     0.0f},
     { 0.0f,    0.0f,  -100.0f},
     { 0.0f,    0.0f,   -57.0f},
     { 0.0f,    0.0f,  -100.0f},
     { 0.0f,    0.0f,     0.0f},
     { 0.0f,    0.0f,   -43.0f},
+    {30.0f,    0.0f,    00.0f},
 };
 
 #endif

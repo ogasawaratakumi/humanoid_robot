@@ -91,7 +91,7 @@ void Kinematics::calcForwardKinematics( int rootlink)
 	calcForwardKinematics(ulink[rootlink].sister);
 	calcForwardKinematics(ulink[rootlink].child);
 }
-
+/*
 bool Kinematics::calcInverseKinematics(int to, Link target)
 {
 	MatrixXd J, dq;
@@ -123,3 +123,32 @@ bool Kinematics::calcInverseKinematics(int to, Link target)
 	}
 	return false;
 }
+*/
+
+
+bool Kinematics::calcInverseKinematics( int to, Link target ) {
+  Matrix<double,6,6> J;
+  Matrix<double,6,1> dq, err;
+
+  const double lambda = 0.5;
+  const int iteration = 100;
+
+  calcForwardKinematics(BASE);
+  vector<int> idx = FindRoute(to);
+
+  for(int n=0;n<iteration;n++){
+	J = calcJacobian2(ulink, idx);
+	err = calcVWerr(target, ulink[to]);
+	if(err.norm() < eps) return true;
+	dq = lambda * (J.inverse() * err);
+	for(size_t nn=0;nn<idx.size();nn++){
+	  int j = idx[nn];
+	  ulink[j].q += dq(nn);
+	}
+	if(to == RR2) ulink[RP2].q = -ulink[RP1].q;
+	else if(to == LR2) ulink[LP2].q = -ulink[LP1].q;
+	calcForwardKinematics(BASE);
+  }
+  return false;
+}
+

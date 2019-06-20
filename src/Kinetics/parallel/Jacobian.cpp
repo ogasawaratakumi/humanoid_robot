@@ -60,24 +60,24 @@ MatrixXd calcJacobian( Link *ulink, std::vector<int> idx ) {
     return J;
 }
 
-/*
-MatrixXd calcJacobian(Link *ulink, std::vector<int> idx) {
-    size_t jsize = idx.size();
-    Matrix<double,3,1> target = ulink[idx.back()].p;
-    Matrix<double,6,6> J = MatrixXd::Zero(6,6);
+MatrixXd calcJacobian2(Link *ulink, std::vector<int> idx)
+{
+  std::size_t jsize = idx.size();
+  Matrix<double,3,1> target = ulink[idx.back()].p;
+  Matrix<double,6,6> J = MatrixXd::Zero(6,6);
 
-    for(size_t i=0; i<jsize;i++) {
-        int j= idx[i];
-        Matrix<double,3,1> a = ulink[j].R * ulink[j].a;
-        Matrix<double,3,1> b = a.cross(target-ulink[j].p);
-        J(0,i) = b(0); J(1,i) = b(1); J(2,i) = b(2);
-        if((j != RP3)&&(j != LP3)) {
-            J(3,i) = a(0); J(4,i) = a(1); J(5,i) = a(2);
-        }else {
-            J(3,i) = 0; J(4,i) = 0; J(5,i) = 0;
-        }
-    }
+  for(size_t i=0;i<jsize;i++)
+  {
+	int j = idx[i];
+	Matrix<double,3,1> a = ulink[j].R * ulink[j].a;
+	Matrix<double,3,1> b = a.cross(target - ulink[j].p);
+	J(0,i) = b(0); J(1,i) = b(1); J(2,i) = b(2);
+	if((j != RP3)&&(j != LP3)){
+	  J(3,i) = a(0); J(4,i) = a(1); J(5,i) = a(2);
+	}else{
+	  J(3,i) = 0; J(4,i) = 0; J(5,i) = 0;
+	}
+  }
 
-    return J;
+  return J;
 }
-*/

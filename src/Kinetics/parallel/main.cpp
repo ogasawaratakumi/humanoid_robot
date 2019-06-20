@@ -6,6 +6,9 @@
 #include "Kinematics.h"
 #include "Link.h"
 #include "../Eigen/Dense"
+#include "matplotlibcpp.h"
+
+namespace plt = matplotlibcpp;
 
 
 double deg2rad( double deg ) {
@@ -17,7 +20,8 @@ double rad2deg( double rad ) {
 }
 
 int main() {
-  std::vector<double> x_list, z_list;
+  std::vector<double> x_list, z_list, x1_list, z1_list, x2_list, z2_list, x3_list, z3_list, x4_list, z4_list;
+  std::vector<double> place_x, place_z;
   const char *fileName = "data.txt";
   std::ofstream ofs(fileName);
 
@@ -37,23 +41,28 @@ int main() {
 
   ulink[LY ].q = deg2rad(0.0);
   ulink[LR1].q = deg2rad(0.0);
-  ulink[LP1].q = deg2rad(-20.0);
-  ulink[LP2].q = -deg2rad(-20.0);
-  ulink[LP3].q = deg2rad(20.0);
-  ulink[LP4].q = -deg2rad(20.0);
+  ulink[LP1].q = deg2rad(-50.0);
+  ulink[LP2].q = -deg2rad(-50.0);
+  ulink[LP3].q = deg2rad(50.0);
+  ulink[LP4].q = -deg2rad(50.0);
   ulink[LR2].q = deg2rad(0.0);
 
   ulink[RY ].q = deg2rad(0.0);
   ulink[RR1].q = deg2rad(0.0);
-  ulink[RP1].q = deg2rad(-20.0);
-  ulink[RP2].q = -deg2rad(-20.0);
-  ulink[RP3].q = deg2rad(20.0);
-  ulink[RP4].q = -deg2rad(20.0);
+  ulink[RP1].q = deg2rad(-50.0);
+  ulink[RP2].q = -deg2rad(-50.0);
+  ulink[RP3].q = deg2rad(50.0);
+  ulink[RP4].q = -deg2rad(50.0);
   ulink[RR2].q = deg2rad(0.0);
 
   kine.calcForwardKinematics(BASE);
 
-  for( i=0; i<row; i++ ) {
+  for( int i=RY; i<=RF2; i++ ) {
+	x_list.push_back(ulink[i].p(0));
+	z_list.push_back(ulink[i].p(2));
+  }
+
+    for( i=0; i<row; i++ ) {
 	for( j=0; j<colm; j++ ) {
 	  ofs << base[i][j] << ' ';
 	}
@@ -62,21 +71,55 @@ int main() {
 	}
   }
 
-
+  
   int target_link = RR2;
   Link Target = ulink[target_link];
 
-  //TODO x-z平面で考える.与える座標をマウスポインタにする.
-  Target.p << 0.14, -0.44, -3.00;
-  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(8) );
+  Target.p << -0.607, -0.44, -2.34;
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-5) );
 
   kine.calcInverseKinematics(target_link, Target);
+  for( int i=RY; i<=RF2; i++ ) {
+	x1_list.push_back(ulink[i].p(0));
+	z1_list.push_back(ulink[i].p(2));
+  }
+ 
+  Link Target_r2 = ulink[target_link];
+
+  Target.p << 1.28, -0.44, -2.765;
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
+
+  kine.calcInverseKinematics(target_link, Target);
+  for( int i=RY; i<=RF2; i++ ) {
+	x2_list.push_back(ulink[i].p(0));
+	z2_list.push_back(ulink[i].p(2));
+  }
+  
+  Link Target_r3 = ulink[target_link];
+  Target.p << 1.78, -0.44, -2.065;
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
+
+  kine.calcInverseKinematics(target_link, Target);
+  for( int i=RY; i<=RF2; i++ ) {
+	x3_list.push_back(ulink[i].p(0));
+	z3_list.push_back(ulink[i].p(2));
+  }
+
+  Link Target_r4 = ulink[target_link];
+  Target.p << 0.63, -0.44, -2.045;
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-0.5) );
+
+  kine.calcInverseKinematics(target_link, Target);
+  for( int i=RY; i<=RF2; i++ ) {
+	x4_list.push_back(ulink[i].p(0));
+	z4_list.push_back(ulink[i].p(2));
+  }
 
   target_link = LR2;
   Link Target_l = ulink[target_link];
 
-  Target_l.p << 0.12, 0.44, -2.60;
-  Target_l.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-20) );
+  Target_l.p << 0.22, 0.44, -1.60;
+  Target_l.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target_l);
 
@@ -88,6 +131,19 @@ int main() {
   for( int l_leg=LY; l_leg<=LF; l_leg++ ) {
 	ofs << ulink[l_leg].p.transpose() << std::endl;
   }
+  place_x.push_back(0.4064); place_z.push_back(-2.79653);
+  
+  plt::named_plot( "leg", x_list, z_list);
+  //plt::legend(); 
+  plt::named_plot( "Frame1", x1_list, z1_list, "--b");
+  plt::named_plot( "Frame2", x2_list, z2_list, "--r");
+  plt::named_plot( "Frame3", x3_list, z3_list, "--g");
+  //plt::named_plot( "Frame4", x4_list, z4_list, "g");
+  plt::named_plot( "Target", place_x, place_z, "x");
+  plt::legend(); 
+  plt::xlim(-2.0, 2.0);
+  plt::ylim(-3.5, 3.5 );
+  plt::show();
 
   return 0;
 }
