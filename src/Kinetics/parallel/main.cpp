@@ -21,7 +21,7 @@ double rad2deg( double rad ) {
 
 int main() {
   std::vector<double> x_list, z_list, x1_list, z1_list, x2_list, z2_list, x3_list, z3_list, x4_list, z4_list;
-  std::vector<double> place_x, place_z;
+  std::vector<double> place_x, place_z, place_x1, place_z1, place_x2, place_z2;
   const char *fileName = "data.txt";
   std::ofstream ofs(fileName);
 
@@ -71,28 +71,36 @@ int main() {
 	}
   }
 
-  
-  int target_link = RR2;
-  Link Target = ulink[target_link];
 
-  Target.p << -0.607, -0.44, -2.34;
-  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-5) );
+	int target_link = RR2;
+	Link Target = ulink[target_link];
 
-  kine.calcInverseKinematics(target_link, Target);
-  for( int i=RY; i<=RF2; i++ ) {
-	x1_list.push_back(ulink[i].p(0));
-	z1_list.push_back(ulink[i].p(2));
-  }
- 
+	Target.p << -0.607, -0.44, -2.34;
+	Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-5) );
+
+	kine.calcInverseKinematics(target_link, Target);
+	for( int i=RY; i<=RF2; i++ ) {
+	  x1_list.push_back(ulink[i].p(0));
+	  z1_list.push_back(ulink[i].p(2));
+	  if(i==RR2){
+		cout << ulink[RR2].p(0) << endl;
+		cout << ulink[RR2].p(2) << endl;
+	  }
+	}
+
   Link Target_r2 = ulink[target_link];
 
   Target.p << 1.28, -0.44, -2.765;
-  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(20), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target);
   for( int i=RY; i<=RF2; i++ ) {
 	x2_list.push_back(ulink[i].p(0));
 	z2_list.push_back(ulink[i].p(2));
+	if(i==RR2) {
+	  cout << ulink[RR2].p(0) << endl;
+	  cout << ulink[RR2].p(2) << endl;
+	}
   }
   
   Link Target_r3 = ulink[target_link];
@@ -103,16 +111,24 @@ int main() {
   for( int i=RY; i<=RF2; i++ ) {
 	x3_list.push_back(ulink[i].p(0));
 	z3_list.push_back(ulink[i].p(2));
+  	if(i==RR2) {
+	  cout << ulink[RR2].p(0) << endl;
+	  cout << ulink[RR2].p(2) << endl;
+	}
   }
 
   Link Target_r4 = ulink[target_link];
-  Target.p << 0.63, -0.44, -2.045;
-  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-0.5) );
+  Target.p << -0.83, -0.44, -2.025;
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(45), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target);
   for( int i=RY; i<=RF2; i++ ) {
 	x4_list.push_back(ulink[i].p(0));
 	z4_list.push_back(ulink[i].p(2));
+	if(i==RR2) {
+	  cout << ulink[RR2].p(0) << endl;
+	  cout << ulink[RR2].p(2) << endl;
+	}
   }
 
   target_link = LR2;
@@ -131,17 +147,34 @@ int main() {
   for( int l_leg=LY; l_leg<=LF; l_leg++ ) {
 	ofs << ulink[l_leg].p.transpose() << std::endl;
   }
-  place_x.push_back(0.4064); place_z.push_back(-2.79653);
+  place_x.push_back(-0.6069); place_z.push_back(-2.34);
+  place_x1.push_back(-0.6069); place_z1.push_back(-2.34);
+  place_x2.push_back(-0.6069); place_z2.push_back(-2.34);
+  place_x.push_back(1.20536); place_z.push_back(-2.60992);
+  place_x1.push_back(1.20536); place_z1.push_back(-2.60992);
+  place_x2.push_back(1.20536); place_z2.push_back(-2.60992);
+  place_x.push_back(1.72385); place_z.push_back(-2.09873);
+  place_x1.push_back(1.72385); place_z1.push_back(-2.09873);
+  place_x2.push_back(1.72385); place_z2.push_back(-2.09873);
+  place_x.push_back(-0.83); place_z.push_back(-2.025);
+  place_x1.push_back(-0.83); place_z1.push_back(-2.025);
+  place_x2.push_back(-0.83); place_z2.push_back(-2.025);
   
-  plt::named_plot( "leg", x_list, z_list);
-  //plt::legend(); 
-  plt::named_plot( "Frame1", x1_list, z1_list, "--b");
-  plt::named_plot( "Frame2", x2_list, z2_list, "--r");
-  plt::named_plot( "Frame3", x3_list, z3_list, "--g");
-  //plt::named_plot( "Frame4", x4_list, z4_list, "g");
-  plt::named_plot( "Target", place_x, place_z, "x");
+  plt::subplot(1,2,1);
+  plt::named_plot( "leg model", x_list, z_list);
+  plt::xlim(-1.5, 2.5);
+  plt::ylim(-3.5, 3.5 );
   plt::legend(); 
-  plt::xlim(-2.0, 2.0);
+  plt::subplot(1,2,2);
+  plt::named_plot( "Frame1", x4_list, z4_list, "--m");
+  plt::named_plot( "Frame2", x1_list, z1_list, "--b");
+  plt::named_plot( "Frame3", x2_list, z2_list, "--r");
+  plt::named_plot( "Frame4", x3_list, z3_list, "--g");
+  plt::plot(  place_x, place_z, "x");
+  plt::plot(  place_x1, place_z1, "x");
+  plt::named_plot( "Target", place_x2, place_z2, "x");
+  plt::legend(); 
+  plt::xlim(-1.5, 2.5);
   plt::ylim(-3.5, 3.5 );
   plt::show();
 
