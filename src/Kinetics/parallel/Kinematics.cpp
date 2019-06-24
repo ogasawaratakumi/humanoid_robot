@@ -91,7 +91,7 @@ void Kinematics::calcForwardKinematics( int rootlink)
 	calcForwardKinematics(ulink[rootlink].sister);
 	calcForwardKinematics(ulink[rootlink].child);
 }
-/*
+
 bool Kinematics::calcInverseKinematics(int to, Link target)
 {
 	MatrixXd J, dq;
@@ -123,9 +123,9 @@ bool Kinematics::calcInverseKinematics(int to, Link target)
 	}
 	return false;
 }
-*/
 
 
+/*
 bool Kinematics::calcInverseKinematics( int to, Link target ) {
   Matrix<double,6,6> J;
   Matrix<double,6,1> dq, err;
@@ -151,4 +151,4 @@ bool Kinematics::calcInverseKinematics( int to, Link target ) {
   }
   return false;
 }
-
+*/

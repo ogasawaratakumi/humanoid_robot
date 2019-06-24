@@ -19,10 +19,8 @@ static double roll = 0.0f;
 static double pitch = 0.0f;
 static double yaw = 0.0f;
 
-static double angle[6];
-//static double initial_angle[6] = {0.0,-50.0,50.0,0.0,50.0,3.0};
-static double initial_angle[6] = { -50.0, 50.0, 50.0, -50.0, 0.0, 0.0 };
-//static double initial_angle[6] = { -0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static double angle[7];
+static double initial_angle[7] = { 0.0, -30.0, 0.0, 30.0, 30.0, 0.0, -30.0 };
 static GLdouble centerX = 0.0f;
 static GLdouble centerY = 0.0f;
 static GLdouble centerZ = 0.0f;
@@ -78,9 +76,7 @@ double rad2deg( double rad ) {
 double deg2rad( double deg ) {
   return deg*M_PI/180.0f;
 }
-/*
- * 直方体を描く
- */
+
 static void myBox(double x, double y, double z)
 {
   GLdouble vertex[][3] = {
@@ -112,12 +108,12 @@ static void myBox(double x, double y, double z)
 	{ 0.0, 1.0, 0.0 }
   };
 
-  const static GLfloat red[] = { 0.3, 0.6, 0.8, 1.0 };
+  const static GLfloat black[] = { 0.6, 0.6, 0.8, 0.0 };
 
   int i, j;
 
   /* 材質を設定する */
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, black);
 
   glBegin(GL_QUADS);
   for (j = 0; j < 6; ++j) {
@@ -129,12 +125,9 @@ static void myBox(double x, double y, double z)
   glEnd();
 }
 
-/*
- * 円柱を描く
- */
 static void myCylinder(double radius, double height, int sides)
 {
-  const static GLfloat yellow[] = { 0.5, 0.5, 0.5, 1.0 };
+  const static GLfloat yellow[] = { 0.2, 0.1, 0.3, 1.0 };
   double step = 6.28318530717958647692 / (double)sides;
   int i = 0;
 
@@ -173,9 +166,6 @@ static void myCylinder(double radius, double height, int sides)
   glEnd();
 }
 
-/*
- * 地面を描く
- */
 static void myGround(double height)
 {
   const static GLfloat ground[][4] = {
@@ -199,12 +189,52 @@ static void myGround(double height)
   glEnd();
 }
 
-/*
- * 画面表示
- */
+void leg_data(double side) {
+ //股
+  glTranslated(0.0, 0.25, side);
+  glRotated(90.0, 1.0, 0.0, 0.0);
+  glRotated(angle[0], 1.0, 0.0, 0.0);
+  glRotated(angle[1], 0.0, 1.0, 0.0);
+  glRotated(angle[2], 0.0, 0.0, 1.0);
+  myCylinder(0.3, 0.4, 12);
+
+  //膝上
+  glTranslated(0.0,-0.0, 0.8);
+  myBox(0.2,0.2,0.6);
+ 
+  //関節
+  glTranslated(0.0, -0.0, 0.8);
+  glRotated(angle[3], 0.0, 1.0, 0.0);
+  myCylinder(0.3,0.4,12);
+
+  //膝
+  glTranslated(0.0, 0.0, 0.45);
+  myBox(0.2,0.2,0.2);
+
+  //関節
+  glTranslated(0.0, 0.0, 0.45);
+  glRotated(angle[4], 0.0, 1.0, 0.0);
+  myCylinder(0.3, 0.4, 12);
+
+  //膝下
+  glTranslated(0.0, 0.0, 0.8);
+  myBox(0.2,0.2,0.6);
+
+  glTranslated(0.0, 0.0, 0.45);
+  glRotated(angle[5], 1.0, 0.0, 0.0);
+  glRotated(angle[6], 0.0, 1.0, 0.0);
+  myCylinder(0.3, 0.4, 12);
+
+  glTranslated(0.0, 0.0, 0.45);
+  myBox(0.2,0.2,0.2);
+
+  glTranslated(0.0,0.0,0.20);
+  myBox(0.8,0.6,0.1);
+}
+
+
 static void display(void)
 {
-  //const static GLfloat blue[] = { 0.2, 0.2, 0.8, 1.0 };     /* 球の色 */
   const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -212,8 +242,6 @@ static void display(void)
   glLoadIdentity();
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
-  /* 視点の移動（シーンの方を奥に移す）*/
   glTranslated(0.0, 0.0, -5.0);
 
   glMatrixMode(GL_MODELVIEW);
@@ -224,54 +252,14 @@ static void display(void)
 
   glMultMatrixd(Rotate);
 
-  /* シーンの描画 */
   myGround(-4.5);                           
 
-  /*各リンクは相対座標で考えられている。*/
+  glPushMatrix();
+  leg_data(-1.4);
+  glPopMatrix();
 
   glPushMatrix();
-
-  //股
-  glTranslated(0.0, 0.25, -1.4);
-  glRotated(90.0, 1.0, 0.0, 0.0);
-  glRotated(angle[0], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 12);
-
-  //膝上
-  glTranslated(0.0,-0.0, 0.8);
-  //glRotated(90.0, 1.0, 0.0, 0.0);
-  myBox(0.2,0.2,0.6);
- 
-  //関節
-  glTranslated(0.0, -0.0, 0.8);
-  //glRotated(90.0, 1.0, 0.0, 0.0);
-  glRotated(angle[1], 0.0, 1.0, 0.0);
-  myCylinder(0.3,0.4,12);
-
-  //膝
-  glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
-
-  //関節
-  glTranslated(0.0, 0.0, 0.45);
-  glRotated(angle[2], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 12);
-
-  //膝下
-  glTranslated(0.0, 0.0, 0.8);
-  //glRotated(90.0, 1.0, 0.0, 0.0);
-  myBox(0.2,0.2,0.6);
-
-  glTranslated(0.0, 0.0, 0.45);
-  glRotated(angle[3], 0.0, 1.0, 0.0);
-  myCylinder(0.3, 0.4, 12);
-
-  glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
-
-  glTranslated(0.0,0.0,0.20);
-  myBox(0.8,0.6,0.1);
-
+  leg_data(1.4);
   glPopMatrix();
 
   glFlush();
@@ -334,12 +322,8 @@ static void keyboard(unsigned char key, int x, int y)
 	 LEG_Link.R = ik_node->computeMatrixFromAngles(deg2rad(roll), deg2rad(pitch), deg2rad(yaw));
 
 	 ik_node->calcInverseKinematics(RR2, LEG_Link);
-	 //for(int i=0;i<6;i++)
-	 //angle[i] = rad2deg(ulink[i+1].q);
-	 angle[0] = rad2deg(ulink[RP1].q);
-	 angle[1] = rad2deg(ulink[RP2].q);
-	 angle[2] = rad2deg(ulink[RP3].q);
-	 angle[3] = rad2deg(ulink[RP4].q);
+	 for(int i=0;i<7;i++)
+	 angle[i] = rad2deg(ulink[i+1].q);
 }
 
 void mousemove( int x, int y ) {
@@ -407,7 +391,7 @@ int main(int argc, char *argv[])
   ik_node = new Kinematics(ulink);
   SetJointInfo(ulink);
 
-  for(int i=0;i<6;i++){
+  for(int i=0;i<7;i++){
 	ulink[i+1].q = deg2rad(initial_angle[i]);
 	angle[i] = initial_angle[i];
   }
