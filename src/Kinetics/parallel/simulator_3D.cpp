@@ -15,23 +15,27 @@ Kinematics *ik_node;
 static double pos_step = 0.01;
 static double rot_step = 0.5;
 
-static double roll = 0.0f;
-static double pitch = 0.0f;
-static double yaw = 0.0f;
+static double roll1 = 0.0f;
+static double pitch1 = 0.0f;
+static double yaw1 = 0.0f;
+static double roll2 = 0.0f;
+static double pitch2 = 0.0f;
+static double yaw2 = 0.0f;
 
 //static double angle[14];
 static double angle_r[7];
 static double angle_l[7];
-static double initial_angle_r[7] = { 0.0, -30.0, 0.0, 30.0, 30.0, 0.0, -30.0 };
-static double initial_angle_l[7] = { 0.0, -30.0, 0.0, 30.0, 30.0, 0.0, -30.0 };
-//static double initial_angle[7] = { 0.0, -30.0, 0.0, 30.0, 30.0, 0.0, -30.0 };
-//static double initial_angle[14] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static double initial_angle_r[7] = { 0.0, 0.0, 30.0, -30.0, -30.0, 0.0, 0.0 };
+//static double initial_angle_r[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+//static double initial_angle_l[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static double initial_angle_l[7] = { 0.0, 0.0, 30.0, -30.0, -30.0, 30.0, 0.0 };
 static GLdouble centerX = 0.0f;
 static GLdouble centerY = 0.0f;
 static GLdouble centerZ = 0.0f;
 
 int Mouse_X, Mouse_Y;
 int speed;
+int n=2;
 
 struct quaternion {
   double w;
@@ -221,23 +225,23 @@ static void display(void)
    //股
   glTranslated(0.0, 0.25, -1.0);
   glRotated(90.0, 1.0, 0.0, 0.0);
-  glRotated(angle_r[0], 1.0, 0.0, 0.0);
-  glRotated(angle_r[1], 0.0, 1.0, 0.0);
-  glRotated(angle_r[2], 0.0, 0.0, 1.0);
+  glRotated(angle_r[0], 0.0, 0.0, 1.0);
+  glRotated(angle_r[1], 1.0, 0.0, 0.0);
+  glRotated(angle_r[2], 0.0, 1.0, 0.0);
   myCylinder(0.3, 0.4, 12);
 
   //膝上
   glTranslated(0.0,-0.0, 0.8);
-  myBox(0.2,0.2,0.6);
+  myBox(0.2, 0.2, 0.6);
  
   //関節
   glTranslated(0.0, -0.0, 0.8);
   glRotated(angle_r[3], 0.0, 1.0, 0.0);
-  myCylinder(0.3,0.4,12);
+  myCylinder(0.3, 0.4, 12);
 
   //膝
   glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
+  myBox(0.2, 0.2, 0.2);
 
   //関節
   glTranslated(0.0, 0.0, 0.45);
@@ -246,41 +250,41 @@ static void display(void)
 
   //膝下
   glTranslated(0.0, 0.0, 0.8);
-  myBox(0.2,0.2,0.6);
+  myBox(0.2, 0.2, 0.6);
 
   glTranslated(0.0, 0.0, 0.45);
-  glRotated(angle_r[5], 1.0, 0.0, 0.0);
-  glRotated(angle_r[6], 0.0, 1.0, 0.0);
+  glRotated(angle_r[5], 0.0, 1.0, 0.0);
+  glRotated(angle_r[6], 1.0, 0.0, 0.0);
   myCylinder(0.3, 0.4, 12);
 
   glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
+  myBox(0.2, 0.2, 0.2);
 
   glTranslated(0.0,0.0,0.20);
-  myBox(0.8,0.6,0.1);
+  myBox(0.8, 0.6, 0.1);
   glPopMatrix();
 
   glPushMatrix();
   //股
   glTranslated(0.0, 0.25, 1.0);
   glRotated(90.0, 1.0, 0.0, 0.0);
-  glRotated(angle_l[0], 1.0, 0.0, 0.0);
-  glRotated(angle_l[1], 0.0, 1.0, 0.0);
-  glRotated(angle_l[2], 0.0, 0.0, 1.0);
+  glRotated(angle_l[0], 0.0, 0.0, 1.0);
+  glRotated(angle_l[1], 1.0, 0.0, 0.0);
+  glRotated(angle_l[2], 0.0, 1.0, 0.0);
   myCylinder(0.3, 0.4, 12);
 
   //膝上
-  glTranslated(0.0,-0.0, 0.8);
-  myBox(0.2,0.2,0.6);
+  glTranslated(0.0, 0.0, 0.8);
+  myBox(0.2, 0.2, 0.6);
  
   //関節
   glTranslated(0.0, -0.0, 0.8);
   glRotated(angle_l[3], 0.0, 1.0, 0.0);
-  myCylinder(0.3,0.4,12);
+  myCylinder(0.3, 0.4, 12);
 
   //膝
   glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
+  myBox(0.2, 0.2, 0.2);
 
   //関節
   glTranslated(0.0, 0.0, 0.45);
@@ -289,18 +293,18 @@ static void display(void)
 
   //膝下
   glTranslated(0.0, 0.0, 0.8);
-  myBox(0.2,0.2,0.6);
+  myBox(0.2, 0.2, 0.6);
 
   glTranslated(0.0, 0.0, 0.45);
-  glRotated(angle_l[5], 1.0, 0.0, 0.0);
-  glRotated(angle_l[6], 0.0, 1.0, 0.0);
+  glRotated(angle_l[5], 0.0, 1.0, 0.0);
+  glRotated(angle_l[6], 1.0, 0.0, 0.0);
   myCylinder(0.3, 0.4, 12);
 
   glTranslated(0.0, 0.0, 0.45);
-  myBox(0.2,0.2,0.2);
+  myBox(0.2, 0.2, 0.2);
 
-  glTranslated(0.0,0.0,0.20);
-  myBox(0.8,0.6,0.1);
+  glTranslated(0.0, 0.0, 0.20);
+  myBox(0.8, 0.6, 0.1);
   glPopMatrix();
 
   glFlush();
@@ -325,42 +329,64 @@ static void keyboard(unsigned char key, int x, int y)
 	exit(0);
   }else if(key == 'f'){	// x
 	LEG_Link1.p(0) += pos_step;	
-	printf("pos[x] = %lf\n", LEG_Link1.p(0));
   }else if(key == 'j'){
 	LEG_Link1.p(0) -= pos_step; 
-	printf("pos[x] = %lf\n", LEG_Link1.p(0));
   }else if(key == 'd'){	// y
 	LEG_Link1.p(1) += pos_step;
-	printf("pos[y] = %lf\n", LEG_Link1.p(1));
   }else if(key == 'k'){
 	LEG_Link1.p(1) -= pos_step;
-	printf("pos[y] = %lf\n", LEG_Link1.p(1));
   }else if(key == 's'){	// z
 	LEG_Link1.p(2) += pos_step;
-	printf("pos[z] = %lf\n", LEG_Link1.p(2));
   }else if(key == 'l'){
 	LEG_Link1.p(2) -= pos_step;
-	printf("pos[z] = %lf\n", LEG_Link1.p(2));
   }else if(key == 'r'){	// roll
-	roll += rot_step;
+	roll1 += rot_step;
   }else if(key == 'u'){
-	roll -= rot_step;
+	roll1 -= rot_step;
   }else if(key == 'e'){	// pitch
-	pitch += rot_step;
+	pitch1 += rot_step;
   }else if(key == 'i'){
-	pitch -= rot_step;
+	pitch1 -= rot_step;
   }else if(key == 'w'){	// yaw
-	yaw += rot_step;
+	yaw1 += rot_step;
   }else if(key == 'o'){
-	yaw -= rot_step;
+	yaw1 -= rot_step;
+  }else if(key == 'F'){
+	LEG_Link2.p(0) += pos_step;
+  }else if(key == 'J'){
+	LEG_Link2.p(0) -= pos_step;
+  }else if(key == 'D'){
+	LEG_Link2.p(1) += pos_step;
+  }else if(key == 'K'){
+	LEG_Link2.p(1) -= pos_step;
+  }else if(key == 'S'){
+	LEG_Link2.p(2) += pos_step;
+  }else if(key == 'L'){
+	LEG_Link2.p(2) -= pos_step;
+  }else if(key == 'R'){
+	roll2 += rot_step;
+  }else if(key == 'U'){
+	roll2 -= rot_step;
+  }else if(key == 'E'){
+	pitch2 += rot_step;
+  }else if(key == 'I'){
+	pitch2 -= rot_step;
+  }else if(key == 'W'){
+	yaw2 += rot_step;
+  }else if(key == 'O'){
+	yaw2 -= rot_step;
   }
 
-	 LEG_Link1.R = ik_node->computeMatrixFromAngles(deg2rad(roll), deg2rad(pitch), deg2rad(yaw));
+	 LEG_Link1.R = ik_node->computeMatrixFromAngles(deg2rad(roll1), deg2rad(pitch1), deg2rad(yaw1));
+	 //LEG_Link2.R = ik_node->computeMatrixFromAngles(deg2rad(roll2), deg2rad(pitch2), deg2rad(yaw2));
 
 	 ik_node->calcInverseKinematics(RR2, LEG_Link1);
-	 //ik_node->calcInverseKinematics(LR2, LEG_link2);
+	 //ik_node->calcInverseKinematics(LR2, LEG_Link2);
 	 for(int i=0;i<7;i++)
-	 angle_r[i] = rad2deg(ulink[i+1].q);
+	   angle_r[i] = rad2deg(ulink[i+1].q);
+
+	 /*for(int i=0; i<7; i++ ) 
+	   angle_l[i] = rad2deg(ulink[i+1].q);*/
 }
 
 void mousemove( int x, int y ) {
@@ -390,12 +416,23 @@ void mouse( int button, int state, int x, int y ) {
 		  FILE *fp = fopen("./030_hr42_kick_r.txt","a");
 		  if( fp != NULL ) {
 			fprintf( fp, "%d,", speed );
-			for(int i=0; i<14; i++) {
-			  fprintf( fp, "%lf,", angle_r[i] );
-			  if(i==13) {
-				fprintf(fp, "\n" );
+			for(int i=6; i>=0; i--) {
+			  if(i==3) {
+				continue;
+			  }else {
+				fprintf( fp, "%d,", (int)angle_r[i] );
 			  }
 			}
+			fprintf(fp, "0,0,0," );
+			for(int i=6; i>=0; i--) {
+			  if(i==3) {
+				continue;
+			  }else {
+				fprintf( fp, "%d,", (int)angle_l[i] );
+			  }
+			}
+			fprintf( fp, "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,%d,%d,0x0\n", n,n );
+			n++;
 		  }
 		  fclose( fp );
 		}
@@ -436,13 +473,18 @@ int main(int argc, char *argv[])
   ik_node = new Kinematics(ulink);
   SetJointInfo(ulink);
 
-  for(int i=0;i<7;i++){
+  for( int i=0; i<7; i++ ){
 	ulink[i+1].q = deg2rad(initial_angle_r[i]);
 	angle_r[i] = initial_angle_r[i];
   }
+  for( int i=0; i<7; i++ ) {
+	ulink[i+1].q = deg2rad(initial_angle_l[i]);
+	angle_l[i] = initial_angle_l[i];
+  }
+
   ik_node->calcForwardKinematics(BASE);
   LEG_Link1 = ulink[RR2];
-  LEG_Link2 = ulink[LR2];
+  //LEG_Link2 = ulink[LR2];
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
