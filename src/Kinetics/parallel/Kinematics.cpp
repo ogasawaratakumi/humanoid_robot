@@ -124,7 +124,6 @@ bool Kinematics::calcInverseKinematics(int to, Link target)
 	return false;
 }
 
-
 /*
 bool Kinematics::calcInverseKinematics( int to, Link target ) {
   Matrix<double,6,6> J;
