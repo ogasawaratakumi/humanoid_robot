@@ -30,9 +30,9 @@ int main() {
   const int colm = 3;
 
   double base[row][colm] = {
-	{0.0,  0.0,  0.0},
-	{0.0,  0.44, 0.0},
-	{0.0, -0.44, 0.0}
+	{ 0.0,  0.0,  0.0 },
+	{ 0.0,  0.44, 0.0 },
+	{ 0.0, -0.44, 0.0 }
   };
 
   Link ulink[LINK_NUM];
@@ -41,18 +41,18 @@ int main() {
 
   ulink[LY ].q = deg2rad(0.0);
   ulink[LR1].q = deg2rad(0.0);
-  ulink[LP1].q = deg2rad(-50.0);
-  ulink[LP2].q = -deg2rad(-50.0);
-  ulink[LP3].q = deg2rad(50.0);
-  ulink[LP4].q = -deg2rad(50.0);
+  ulink[LP1].q = deg2rad(-15.0);
+  ulink[LP2].q = -deg2rad(-15.0);
+  ulink[LP3].q = deg2rad(15.0);
+  ulink[LP4].q = -deg2rad(15.0);
   ulink[LR2].q = deg2rad(0.0);
 
   ulink[RY ].q = deg2rad(0.0);
   ulink[RR1].q = deg2rad(0.0);
-  ulink[RP1].q = deg2rad(-50.0);
-  ulink[RP2].q = -deg2rad(-50.0);
-  ulink[RP3].q = deg2rad(50.0);
-  ulink[RP4].q = -deg2rad(50.0);
+  ulink[RP1].q = deg2rad(-15.0);
+  ulink[RP2].q = -deg2rad(-15.0);
+  ulink[RP3].q = deg2rad(15.0);
+  ulink[RP4].q = -deg2rad(15.0);
   ulink[RR2].q = deg2rad(0.0);
 
   kine.calcForwardKinematics(BASE);
@@ -71,10 +71,9 @@ int main() {
 	}
   }
 
-
 	int target_link = RR2;
-	Link Target = ulink[target_link];
 
+	Link Target = ulink[target_link];
 	Target.p << -0.607, -0.44, -2.34;
 	Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(-5) );
 
@@ -89,8 +88,7 @@ int main() {
 	}
 
   Link Target_r2 = ulink[target_link];
-
-  Target.p << 1.28, -0.44, -2.565;
+  Target.p << 1.205, -0.44, -2.609;
   Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(10), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target);
@@ -104,7 +102,7 @@ int main() {
   }
   
   Link Target_r3 = ulink[target_link];
-  Target.p << 1.22, -0.49, -2.541;
+  Target.p << 1.72, -0.49, -2.098;
   Target.R = kine.computeMatrixFromAngles( deg2rad(56.79), deg2rad(0), deg2rad(-7.61) );
 
   kine.calcInverseKinematics(target_link, Target);
@@ -119,7 +117,7 @@ int main() {
 
   Link Target_r4 = ulink[target_link];
   Target.p << -0.83, -0.44, -2.025;
-  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(45), deg2rad(0) );
+  Target.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target);
   for( int i=RY; i<=RF2; i++ ) {
@@ -135,7 +133,7 @@ int main() {
   Link Target_l = ulink[target_link];
 
   Target_l.p << 0.16, 0.44, -1.60;
-  Target_l.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(0), deg2rad(0) );
+  Target_l.R = kine.computeMatrixFromAngles( deg2rad(0), deg2rad(-20), deg2rad(0) );
 
   kine.calcInverseKinematics(target_link, Target_l);
 
@@ -170,8 +168,8 @@ int main() {
   plt::named_plot( "Frame2", x1_list, z1_list, "--b");
   plt::named_plot( "Frame3", x2_list, z2_list, "--r");
   plt::named_plot( "Frame4", x3_list, z3_list, "--g");
-  plt::plot(  place_x, place_z, "x");
-  plt::plot(  place_x1, place_z1, "x");
+  plt::plot( place_x, place_z, "x");
+  plt::plot( place_x1, place_z1, "x");
   plt::named_plot( "Target", place_x2, place_z2, "x");
   plt::legend(); 
   plt::xlim(-1.5, 2.5);
