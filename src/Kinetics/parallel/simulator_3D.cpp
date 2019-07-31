@@ -412,7 +412,7 @@ void mouse( int button, int state, int x, int y ) {
 		  printf("speed :");
 		  scanf("%d", &speed);
 		  printf("saved!\n");
-		  FILE *fp = fopen("./041_hr42_kick_r.txt","a");
+		  FILE *fp = fopen("./042_hr42_kick_r.txt","a");
 		  if( fp != NULL ) {
 			fprintf( fp, "%d,", speed );
 			for(int i=6; i>=0; i--) {
